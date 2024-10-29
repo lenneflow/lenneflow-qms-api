@@ -23,7 +23,9 @@ public class FunctionDTO {
 
     private RunStatus runStatus;
 
-    private String callBackLink;
+    private String failureReason;
+
+    private String callBackUrl;
 
     private Map<String, Object> inputData = new HashMap<>();
 

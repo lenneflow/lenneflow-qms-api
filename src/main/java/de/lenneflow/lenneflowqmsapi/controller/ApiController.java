@@ -27,6 +27,10 @@ public class ApiController {
         functionDTO.setStepInstanceId(stepInstanceId);
         functionDTO.setWorkflowInstanceId(workflowInstanceId);
         functionDTO.setOutputData(payload.getOutputData());
+        functionDTO.setRunStatus(payload.getRunStatus());
+        functionDTO.setInputData(payload.getInputData());
+        functionDTO.setCallBackUrl(payload.getCallBackUrl());
+        functionDTO.setFailureReason(payload.getFailureReason());
         queueController.addFunctionDtoToResultQueue(functionDTO);
     }
 }
