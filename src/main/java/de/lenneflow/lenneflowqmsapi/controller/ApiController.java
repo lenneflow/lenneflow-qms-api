@@ -3,13 +3,11 @@ package de.lenneflow.lenneflowqmsapi.controller;
 import de.lenneflow.lenneflowqmsapi.component.QueueController;
 import de.lenneflow.lenneflowqmsapi.dto.FunctionDTO;
 import de.lenneflow.lenneflowqmsapi.dto.FunctionPayload;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
+import de.lenneflow.lenneflowqmsapi.util.Validator;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/qms")
-@EnableAsync
 public class ApiController {
 
     private final QueueController queueController;
@@ -20,8 +18,8 @@ public class ApiController {
 
 
     @PostMapping("/callback/{executionId}/{stepInstanceId}/{workflowInstanceId}")
-    @Async
     public void workerCallBack(@RequestBody FunctionPayload payload, @PathVariable String executionId, @PathVariable String stepInstanceId, @PathVariable String workflowInstanceId){
+        Validator.validate(payload);
         FunctionDTO functionDTO = new FunctionDTO();
         functionDTO.setExecutionId(executionId);
         functionDTO.setStepInstanceId(stepInstanceId);
@@ -31,6 +29,6 @@ public class ApiController {
         functionDTO.setInputData(payload.getInputData());
         functionDTO.setCallBackUrl(payload.getCallBackUrl());
         functionDTO.setFailureReason(payload.getFailureReason());
-        queueController.addFunctionDtoToResultQueue(functionDTO);
+        new Thread(() ->queueController.addFunctionDtoToResultQueue(functionDTO)).start();
     }
 }
